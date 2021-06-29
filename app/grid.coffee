@@ -24,7 +24,7 @@ Take ["Colors"], (Colors)->
     ctx.stroke()
 
 
-  Make "Grid", Grid = (ctx, camera, screen)->
+  Make "Grid", Grid = (ctx, screen, camera)->
 
     # Axis lines
     line ctx, -screen.hw, camera.y, screen.hw, camera.y, Colors.grid.axis
@@ -52,7 +52,7 @@ Take ["Colors"], (Colors)->
         # From here on out, everything happens in screenspace
 
         # Use a bigger dot if we're on a major grid row & col
-        radius = if isMajorX and isMajorY then 2 else .6
+        radius = if isMajorX and isMajorY then 1.6 else .6
 
         # Apply a falloff as we approach the edge of the screen
         r = radius * edgeScale x, y, screen
@@ -83,5 +83,5 @@ Take ["Colors"], (Colors)->
     # Crop the peak (/‾‾‾\-shaped)
     scale = Math.min scale, 1
     # Apply an exponential ease-in curve, so that we start fading slowly then fade faster as we approach the edge
-    scale = Math.pow scale, 1/2
+    scale = scale ** 0.5
     return scale
