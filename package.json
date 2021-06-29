@@ -1,0 +1,23 @@
+{
+  "name": "Dust",
+  "version": "6.6.6",
+  "license": "CC-BY-4.0",
+  "scripts": {
+    "precoffee": "fd . -e coffee app | xargs awk '(FNR==1){print \"\\n\\n# \" FILENAME}1' node_modules/take-and-make/source/*.coffee node_modules/bucket/{debounced,monkey-patch,test}.coffee node_modules/doom/*.coffee > build/app.coffee",
+    "coffee": "coffee --bare --map --output build/app.js --compile build/app.coffee",
+    "watch-coffee": "onchange 'app/**/*.coffee' -- npm run coffee",
+    "prescss": "fd . -e scss app | xargs awk '(FNR==1){print \"\\n\\n// \" FILENAME}1' > build/app.scss",
+    "scss": "sass build/app.scss build/app.css",
+    "watch-scss": "onchange 'app/**/*.scss' -- npm run scss",
+    "serve": "serve -p 3000 build -n",
+    "prestart": "npm run coffee && npm run scss",
+    "start": "npm run watch-coffee & npm run watch-scss & npm run serve"
+  },
+  "devDependencies": {
+    "DOOM": "ivanreese/doom",
+    "bucket": "ivanreese/bucket",
+    "serve": "latest",
+    "onchange": "latest",
+    "take-and-make": "cdig/take-and-make"
+  }
+}
