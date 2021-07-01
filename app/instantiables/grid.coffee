@@ -1,4 +1,11 @@
-Take ["Colors"], (Colors)->
+Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
+
+  template =
+    type: "Grid"
+    name: "Grid"
+
+  Make "Grid", Grid = (opts = {})->
+    inst = Object.merge template, opts
 
   minor = 32
   major = 4 * minor
@@ -24,11 +31,10 @@ Take ["Colors"], (Colors)->
     ctx.stroke()
 
 
-  Make "Grid", Grid = (ctx, screen, camera)->
-
-    # Axis lines
-    line ctx, -screen.hw, camera.y, screen.hw, camera.y, Colors.grid.axis
-    line ctx, camera.x, -screen.hh, camera.x,  screen.hh, Colors.grid.axis
+  Grid.render = ()->
+    ctx = Canvas.ctx
+    screen = Canvas.size
+    camera = Camera.pos
 
     # Dot grid
 
@@ -37,6 +43,14 @@ Take ["Colors"], (Colors)->
     right  =  screen.hw - camera.x
     top    =  screen.hh - camera.y
     bottom = -screen.hh - camera.y
+
+    # Axis lines
+    step = 10
+    for x in [-screen.hw..screen.hw] by step
+      line ctx, x, camera.y, x+step, camera.y, Colors.grid.axis, 2 * edgeScale x+step/2, camera.y, screen
+    for y in [-screen.hh..screen.hh] by step
+      line ctx, camera.x, y, camera.x, y+step, Colors.grid.axis, 2 * edgeScale camera.x, y+step/2, screen
+
 
     # We align to the grid by snapping the corners and looping through all visible positions
     for x_world in [snap(left)..snap(right)] by minor when x_world > left and x_world < right
