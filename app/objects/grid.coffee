@@ -4,7 +4,7 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
   major = 4 * minor
   snap = (v)-> Math.roundTo v, minor
 
-  Make "Grid", Grid = ()->
+  Make.async "Grid", Grid = ()->
     ctx = Canvas.ctx
     screen = Canvas.size
     camera = Camera.pos
@@ -77,7 +77,7 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
     ctx.stroke()
 
   edgeScale = (x, y, screen)->
-    # Take the x and y, which ramp from the low edge to the high edge of the screen (/-shaped),
+    # Take the x and y, which ramp from low to high pixel coords across the screen (/-shaped),
     # and scale them to the range -0.5 to 0.5
     x = Math.lerp x, -screen.hw, screen.hw, -0.5, 0.5
     y = Math.lerp y, -screen.hh, screen.hh, -0.5, 0.5
@@ -90,3 +90,5 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
     # Apply an exponential ease-in curve, so that we start fading slowly then fade faster as we approach the edge
     scale = scale ** 0.5
     return scale
+
+  Grid.snap = snap

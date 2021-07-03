@@ -1,16 +1,24 @@
-Take ["Camera", "Scene", "Vec2"], (Camera, Scene, Vec2)->
+Take ["Camera", "Grid", "Scene", "Vec2"], (Camera, Grid, Scene, Vec2)->
 
+  down = false
+  dragging = false
+  downPos = null
   lastPos = null
-  state = "up"
+  manipObj = null
 
   eventPos = (e)-> Vec2 e.clientX - window.innerWidth/2, window.innerHeight/2 - e.clientY
 
-  window.addEventListener "mousedown", (e)->
-    pos = lastPos = eventPos e
-    deltaPos = Vec2()
-    state = "down"
 
+  window.addEventListener "mousedown", (e)->
+    down = true
+    pos = lastPos = downPos = eventPos e
     worldPos = Vec2.sub pos, Camera.pos
+
+    if Scene.selection.length > 0
+      for obj in Scene.selection
+        if Vec2.dist(worldPos, obj.pos) <= 128 + 8 + 2
+          manipObj = obj
+          return
 
     for obj in Scene.objects
       if Vec2.dist(worldPos, obj.pos) <= obj.radius + 2
@@ -21,22 +29,33 @@ Take ["Camera", "Scene", "Vec2"], (Camera, Scene, Vec2)->
 
 
   window.addEventListener "mousemove", (e)->
-    return if state is "up"
+    return unless down
 
     pos = eventPos e
     deltaPos = Vec2.sub pos, lastPos
+    worldPos = Vec2.sub pos, Camera.pos
+    worldPos = Vec2.map Grid.snap, worldPos if e.altKey
     lastPos = pos
 
-    if Scene.selection.length > 0
-      for obj in Scene.selection
-        obj.pos = Vec2.add deltaPos, obj.pos
+    if not dragging and Vec2.dist(downPos, pos) >= 5
+      dragging = true
 
-    else if state is "down" and Vec2.len(deltaPos) >= 5
-      state = "panning"
+    if dragging
+      if manipObj?
+        dx = worldPos.x - manipObj.pos.x
+        dy = worldPos.y - manipObj.pos.y
+        manipObj.angle = Math.atan2 -dx, dy
 
-    else if state is "panning"
-      Camera.move deltaPos
+      else if Scene.selection.length > 0
+        for obj in Scene.selection
+          obj.pos = worldPos
+      else
+        Camera.move deltaPos
 
 
   window.addEventListener "mouseup", (e)->
-    state = "up"
+    down = false
+    dragging = false
+    downPos = null
+    lastPos = null
+    manipObj = null
