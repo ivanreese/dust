@@ -2,6 +2,7 @@ Take [], ()->
 
   Make "Scene", Scene =
     objects: []
+    particles: []
     selection: []
 
     select: (...selection)->

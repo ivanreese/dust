@@ -9,21 +9,14 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
     screen = Canvas.size
     camera = Camera.pos
 
-    # Dot grid
-
     # First, convert the corners of the screen into worldspace
     left   = -screen.hw - camera.x
     right  =  screen.hw - camera.x
     top    =  screen.hh - camera.y
     bottom = -screen.hh - camera.y
 
-    # Axis lines
-    # step = 4
-    # for x in [-screen.hw..screen.hw] by step
-    #   line ctx, x, camera.y, x+step, camera.y, Colors.grid.axis, 2 * edgeScale x+step/2, camera.y, screen
-    # for y in [-screen.hh..screen.hh] by step
-    #   line ctx, camera.x, y, camera.x, y+step, Colors.grid.axis, 2 * edgeScale camera.x, y+step/2, screen
-
+    ctx.beginPath()
+    ctx.fillStyle = Colors.grid.dot
 
     # We align to the grid by snapping the corners and looping through all visible positions
     for x_world in [snap(left)..snap(right)] by minor when x_world > left and x_world < right
@@ -36,45 +29,19 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
         isMajorY = y_world % major is 0
         y = y_world + camera.y
 
-        # From here on out, everything happens in screenspace
-
         # Use a bigger dot if we're on a major grid row & col
         radius = if isMajorX and isMajorY then 1.6 else .6
 
         # Apply a falloff as we approach the edge of the screen
         r = radius * edgeScale x, y, screen
 
-        # # If we're drawing on top of an axis line, punch a little "halo" circle out of the axis line
-        # if isAxisX and isMajorY or isAxisY and isMajorX
-        #   circle ctx, x, y, 2+r, Colors.bg
-
-        # Don't bother drawing the smaller grid dots along the axis lines
-        # continue if isAxisX and not isMajorY or isAxisY and not isMajorX
-
         if isMajorX and isMajorY
-          circle ctx, x, y, r, Colors.grid.dot
+          Canvas.circle x, y, r
         else
-          rect ctx, x-r, y-r, r*2, r*2, Colors.grid.dot
-    null
+          Canvas.rect x-r, y-r, r*2, r*2
 
-  circle = (ctx, x, y, r, c)->
-    ctx.beginPath()
-    ctx.fillStyle = c
-    ctx.arc x-0.5, y-0.5, r, 0, Math.TAU
     ctx.fill()
 
-  rect = (ctx, x, y, w, h, c)->
-    ctx.beginPath()
-    ctx.fillStyle = c
-    ctx.fillRect x-0.5, y-0.5, w, h
-
-  line = (ctx, x1, y1, x2, y2, c, w = 1)->
-    ctx.beginPath()
-    ctx.strokeStyle = c
-    ctx.lineWidth = w
-    ctx.moveTo x1-0.5, y1-0.5
-    ctx.lineTo x2-0.5, y2-0.5
-    ctx.stroke()
 
   edgeScale = (x, y, screen)->
     # Take the x and y, which ramp from low to high pixel coords across the screen (/-shaped),

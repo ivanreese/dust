@@ -1,4 +1,4 @@
-Take ["Canvas", "DOOM", "SVG", "Vec2"], (Canvas, DOOM, SVG, Vec2)->
+Take ["Camera", "Canvas", "DOOM", "Scene", "SVG", "Vec2"], (Camera, Canvas, DOOM, Scene, SVG, Vec2)->
 
   template =
     type: "Emitter"
@@ -6,7 +6,21 @@ Take ["Canvas", "DOOM", "SVG", "Vec2"], (Canvas, DOOM, SVG, Vec2)->
     pos: Vec2()
     angle: 0
     radius: 8
+    spawnTime: 0.003
+    spawnTimeAcc: 0
     elm: null
+    particles: []
+
+  particleTemplate =
+    pos: null
+    angle: 0
+    speed: 0
+    maxSpeed: 0
+    radius: 1
+    age: 0
+    maxAge: 8
+    color: "#3c3"
+
 
   Make.async "Emitter", Emitter = (opts = {})->
     obj = Object.merge template, opts
@@ -21,6 +35,16 @@ Take ["Canvas", "DOOM", "SVG", "Vec2"], (Canvas, DOOM, SVG, Vec2)->
 
     return obj
 
-  Emitter.update = (obj)->
+  Emitter.update = (obj, dt)->
+    obj.spawnTimeAcc += dt
 
-  Emitter.render = (obj)->
+    while obj.spawnTimeAcc >= obj.spawnTime
+      obj.spawnTimeAcc -= obj.spawnTime
+      Scene.particles.push Object.merge particleTemplate,
+        pos: Vec2.clone obj.pos
+        angle: Math.rand 0, Math.TAU
+        speed: speed = Math.rand 50, 100
+        maxSpeed: speed
+        radius: Math.rand 1, 2
+
+  Emitter.render = (obj, dt)->

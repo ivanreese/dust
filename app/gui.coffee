@@ -7,7 +7,7 @@ Take ["Canvas", "DOOM", "Scene", "SVG", "Vec2"], (Canvas, DOOM, Scene, SVG, Vec2
 
       DOOM.create "circle", gui, r: 128, stroke: "#666", fill: "var(--bg)", fillOpacity: 0.5, strokeWidth: 4
 
-      rotate = DOOM.create "g", gui, transform: "translate(0, 128)", strokeWidth: 2
+      rotate = DOOM.create "g", gui, transform: "translate(128, 0) rotate(#{-obj.angle*360/Math.TAU})", strokeWidth: 2
       DOOM.create "circle", rotate, r: 12, fill: "#f07"
       DOOM.create "path", rotate, stroke: "black", d: "M-6,0 A6,6 270 1 1 0 6"
       DOOM.create "path", rotate, fill: "black", d: "M0,3 L-5,6 L0,9"

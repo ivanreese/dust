@@ -44,7 +44,7 @@ Take ["Camera", "Grid", "Scene", "Vec2"], (Camera, Grid, Scene, Vec2)->
       if manipObj?
         dx = worldPos.x - manipObj.pos.x
         dy = worldPos.y - manipObj.pos.y
-        manipObj.angle = Math.atan2 -dx, dy
+        manipObj.angle = Math.PI/2 - Math.atan2 dx, dy
 
       else if Scene.selection.length > 0
         for obj in Scene.selection

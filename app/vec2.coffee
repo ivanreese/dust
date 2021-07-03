@@ -3,6 +3,7 @@ do ()->
   # Constructors
   Vec2 = (x=0, y=0)-> x:x, y:y
   Vec2.clone = (v)-> Vec2 v.x, v.y
+  Vec2.fromPolar = (a, d)-> Vec2 Math.cos(a) * d, Math.sin(a) * d
   Vec2.of = (s)-> Vec2 s, s
   Vec2.random = ()-> Vec2.complement Vec2.Smul 2, Vec2 Math.random(), Math.random()
   Vec2.toA = (v)-> [v.x, v.y]
@@ -41,6 +42,7 @@ do ()->
   Vec2.Ssub = (s, v)-> Vec2.sub Vec2.of(s), v
 
   # Measurement
+  Vec2.angle = (v)-> Math.atan2 v.y, v.x
   Vec2.dist = (a, b)-> Vec2.len Vec2.sub a, b
   Vec2.dist2 = (a, b)-> Vec2.len2 Vec2.sub a, b
   Vec2.dot = (a, b)-> a.x * b.x + a.y * b.y
