@@ -1,37 +1,10 @@
 Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
 
-  template =
-    type: "Grid"
-    name: "Grid"
-
-  Make "Grid", Grid = (opts = {})->
-    inst = Object.merge template, opts
-
   minor = 32
   major = 4 * minor
   snap = (v)-> Math.roundTo v, minor
 
-  circle = (ctx, x, y, r, c)->
-    ctx.beginPath()
-    ctx.fillStyle = c
-    ctx.arc x-0.5, y-0.5, r, 0, Math.TAU
-    ctx.fill()
-
-  rect = (ctx, x, y, w, h, c)->
-    ctx.beginPath()
-    ctx.fillStyle = c
-    ctx.fillRect x-0.5, y-0.5, w, h
-
-  line = (ctx, x1, y1, x2, y2, c, w = 1)->
-    ctx.beginPath()
-    ctx.strokeStyle = c
-    ctx.lineWidth = w
-    ctx.moveTo x1-0.5, y1-0.5
-    ctx.lineTo x2-0.5, y2-0.5
-    ctx.stroke()
-
-
-  Grid.render = ()->
+  Make "Grid", Grid = ()->
     ctx = Canvas.ctx
     screen = Canvas.size
     camera = Camera.pos
@@ -45,11 +18,11 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
     bottom = -screen.hh - camera.y
 
     # Axis lines
-    step = 10
-    for x in [-screen.hw..screen.hw] by step
-      line ctx, x, camera.y, x+step, camera.y, Colors.grid.axis, 2 * edgeScale x+step/2, camera.y, screen
-    for y in [-screen.hh..screen.hh] by step
-      line ctx, camera.x, y, camera.x, y+step, Colors.grid.axis, 2 * edgeScale camera.x, y+step/2, screen
+    # step = 4
+    # for x in [-screen.hw..screen.hw] by step
+    #   line ctx, x, camera.y, x+step, camera.y, Colors.grid.axis, 2 * edgeScale x+step/2, camera.y, screen
+    # for y in [-screen.hh..screen.hh] by step
+    #   line ctx, camera.x, y, camera.x, y+step, Colors.grid.axis, 2 * edgeScale camera.x, y+step/2, screen
 
 
     # We align to the grid by snapping the corners and looping through all visible positions
@@ -71,19 +44,37 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
         # Apply a falloff as we approach the edge of the screen
         r = radius * edgeScale x, y, screen
 
-        # If we're drawing on top of an axis line, punch a little "halo" circle out of the axis line
-        if isAxisX and isMajorY or isAxisY and isMajorX
-          circle ctx, x, y, 2+r, Colors.bg
+        # # If we're drawing on top of an axis line, punch a little "halo" circle out of the axis line
+        # if isAxisX and isMajorY or isAxisY and isMajorX
+        #   circle ctx, x, y, 2+r, Colors.bg
 
         # Don't bother drawing the smaller grid dots along the axis lines
-        continue if isAxisX and not isMajorY or isAxisY and not isMajorX
+        # continue if isAxisX and not isMajorY or isAxisY and not isMajorX
 
-        if isMajorX or isMajorY
+        if isMajorX and isMajorY
           circle ctx, x, y, r, Colors.grid.dot
         else
           rect ctx, x-r, y-r, r*2, r*2, Colors.grid.dot
     null
 
+  circle = (ctx, x, y, r, c)->
+    ctx.beginPath()
+    ctx.fillStyle = c
+    ctx.arc x-0.5, y-0.5, r, 0, Math.TAU
+    ctx.fill()
+
+  rect = (ctx, x, y, w, h, c)->
+    ctx.beginPath()
+    ctx.fillStyle = c
+    ctx.fillRect x-0.5, y-0.5, w, h
+
+  line = (ctx, x1, y1, x2, y2, c, w = 1)->
+    ctx.beginPath()
+    ctx.strokeStyle = c
+    ctx.lineWidth = w
+    ctx.moveTo x1-0.5, y1-0.5
+    ctx.lineTo x2-0.5, y2-0.5
+    ctx.stroke()
 
   edgeScale = (x, y, screen)->
     # Take the x and y, which ramp from the low edge to the high edge of the screen (/-shaped),

@@ -16,8 +16,8 @@
   "devDependencies": {
     "DOOM": "ivanreese/doom",
     "bucket": "ivanreese/bucket",
-    "serve": "latest",
     "onchange": "latest",
+    "serve": "latest",
     "take-and-make": "cdig/take-and-make"
   }
 }

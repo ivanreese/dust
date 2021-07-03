@@ -1,21 +1,17 @@
-Take ["Canvas", "SVG"], (Canvas, SVG)->
-
-  instances = []
-
+# This our main loop
+Take ["Canvas", "Grid", "Scene", "SVG"], (Canvas, Grid, Scene, SVG)->
   requestAnimationFrame render = ()->
     requestAnimationFrame render
-
-    for inst in instances
-      Take(inst.type).update? inst, instances
-
+    for obj in Scene.objects
+      Take(obj.type).update? obj 
+      DOOM obj.elm, transform: "translate(#{obj.pos.x},#{obj.pos.y})"
     Canvas.clear()
+    Grid()
     SVG.render()
-
-    for inst in instances
-      Take(inst.type).render? inst, instances
-
+    Take(obj.type).render? obj for obj in Scene.objects
     null
 
-  Take ["Emitter", "Grid"], (Emitter, Grid)->
-    instances.push Grid()
-    instances.push Emitter()
+# This sets up test data
+Take ["Emitter", "Push", "Scene"], (Emitter, Push, Scene)->
+  Scene.objects.push Emitter()
+  Scene.objects.push Push()

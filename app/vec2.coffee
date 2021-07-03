@@ -3,9 +3,6 @@ do ()->
   # Constructors
   Vec2 = (x=0, y=0)-> x:x, y:y
   Vec2.clone = (v)-> Vec2 v.x, v.y
-  Vec2.fromRectXY = (r)-> Vec2 r.x, r.y
-  Vec2.fromRectWH = (r)-> Vec2 r.w, r.h
-  Vec2.fromRectRB = (r)-> Vec2 r.x+r.w, r.y+r.h
   Vec2.of = (s)-> Vec2 s, s
   Vec2.random = ()-> Vec2.complement Vec2.Smul 2, Vec2 Math.random(), Math.random()
   Vec2.toA = (v)-> [v.x, v.y]
