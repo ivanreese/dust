@@ -1,19 +1,21 @@
-Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
+Take ["Camera", "Canvas", "Colors", "Vec2"], (Camera, Canvas, Colors, Vec2)->
 
+  ctx = Canvas style: "z-index: 0"
   minor = 32
   major = 4 * minor
   snap = (v)-> Math.roundTo v, minor
 
   Make.async "Grid", Grid = ()->
-    ctx = Canvas.ctx
-    screen = Canvas.size
     camera = Camera.pos
+    half = Vec2.halfWindow()
 
     # First, convert the corners of the screen into worldspace
-    left   = -screen.hw - camera.x
-    right  =  screen.hw - camera.x
-    top    =  screen.hh - camera.y
-    bottom = -screen.hh - camera.y
+    left   = -half.x - camera.x
+    right  =  half.x - camera.x
+    top    =  half.y - camera.y
+    bottom = -half.y - camera.y
+
+    ctx.clear()
 
     ctx.beginPath()
     ctx.fillStyle = Colors.grid.dot
@@ -33,21 +35,21 @@ Take ["Camera", "Canvas", "Colors"], (Camera, Canvas, Colors)->
         radius = if isMajorX and isMajorY then 1.6 else .6
 
         # Apply a falloff as we approach the edge of the screen
-        r = radius * edgeScale x, y, screen
+        r = radius * edgeScale x, y, half
 
         if isMajorX and isMajorY
-          Canvas.circle x, y, r
+          ctx.circle x, y, r
         else
-          Canvas.rect x-r, y-r, r*2, r*2
+          ctx.sharpRect x-r, y-r, r*2, r*2
 
     ctx.fill()
 
 
-  edgeScale = (x, y, screen)->
+  edgeScale = (x, y, half)->
     # Take the x and y, which ramp from low to high pixel coords across the screen (/-shaped),
     # and scale them to the range -0.5 to 0.5
-    x = Math.lerp x, -screen.hw, screen.hw, -0.5, 0.5
-    y = Math.lerp y, -screen.hh, screen.hh, -0.5, 0.5
+    x = Math.lerp x, -half.x, half.x, -0.5, 0.5
+    y = Math.lerp y, -half.y, half.y, -0.5, 0.5
     # Use abs to make the range \/-shaped, then take the larger (closest to edge) component
     scale = Math.max Math.abs(x), Math.abs(y)
     # Invert (/\-shaped), and scale so the peak is 4 units high

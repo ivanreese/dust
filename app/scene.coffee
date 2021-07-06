@@ -2,14 +2,8 @@ Take [], ()->
 
   Make "Scene", Scene =
     objects: []
-    particles: []
-    selection: []
+    selected: null
 
-    select: (...selection)->
-      for obj in Scene.selection
-        Take("GUI").deselect obj
-
-      Scene.selection = selection.flat().filter Function.exists
-
-      for obj in Scene.selection
-        Take("GUI").select obj
+    select: (selected)->
+      Scene.selected = selected
+      selected

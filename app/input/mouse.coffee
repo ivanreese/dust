@@ -1,61 +1,70 @@
-Take ["Camera", "Grid", "Scene", "Vec2"], (Camera, Grid, Scene, Vec2)->
+Take ["Camera", "Ring", "Scene", "Vec2", "World"], (Camera, Ring, Scene, Vec2, World)->
 
   down = false
   dragging = false
+  manipulating = null
   downPos = null
   lastPos = null
-  manipObj = null
 
-  eventPos = (e)-> Vec2 e.clientX - window.innerWidth/2, window.innerHeight/2 - e.clientY
+  eventPos = (e)-> Vec2
 
 
   window.addEventListener "mousedown", (e)->
     down = true
-    pos = lastPos = downPos = eventPos e
-    worldPos = Vec2.sub pos, Camera.pos
+    lastPos = downPos = Vec2.fromMouse e
+    worldPos = World.fromScreen downPos
 
-    if Scene.selection.length > 0
-      for obj in Scene.selection
-        if Vec2.dist(worldPos, obj.pos) <= 128 + 8 + 2
-          manipObj = obj
-          return
+    # If we clicked inside the Ring, don't change the selection
+    clickedInRing = Scene.selected? and Vec2.dist(worldPos, Scene.selected.pos) < 64 + 2
 
-    for obj in Scene.objects
-      if Vec2.dist(worldPos, obj.pos) <= obj.radius + 2
-        Scene.select obj
+    unless clickedInRing
+      # See if this click selects any objects
+      for obj in Scene.objects
+        if Vec2.dist(worldPos, obj.pos) <= obj.radius + 2
+          Scene.select obj
+          Ring.select obj
+          break
+
+    # If we have an object selected, see if Ring wants to consume this click.
+    if Scene.selected?
+
+      manipulating = Ring.getControlAt World.toObject Scene.selected, worldPos
+
+      # A control in the Ring consumed the click.
+      if manipulating
+        manipulating.start? Scene.selected, worldPos
         return
 
-    Scene.select null
+      # The ring didn't consume the click, but if we still clicked in the ring, don't deselect.
+      return if clickedInRing
+
+      # If we clicked outside the ring, we should deselect the object.
+      Scene.select null
+      Ring.deselect()
 
 
   window.addEventListener "mousemove", (e)->
     return unless down
 
-    pos = eventPos e
+    pos = Vec2.fromMouse e
     deltaPos = Vec2.sub pos, lastPos
-    worldPos = Vec2.sub pos, Camera.pos
-    worldPos = Vec2.map Grid.snap, worldPos if e.altKey
+    worldPos = World.fromScreen pos
     lastPos = pos
 
     if not dragging and Vec2.dist(downPos, pos) >= 5
       dragging = true
 
     if dragging
-      if manipObj?
-        dx = worldPos.x - manipObj.pos.x
-        dy = worldPos.y - manipObj.pos.y
-        manipObj.angle = Math.PI/2 - Math.atan2 dx, dy
-
-      else if Scene.selection.length > 0
-        for obj in Scene.selection
-          obj.pos = worldPos
+      if manipulating
+        manipulating.change? Scene.selected, worldPos, deltaPos
       else
-        Camera.move deltaPos
+        Camera.move Vec2.invertY deltaPos
 
 
   window.addEventListener "mouseup", (e)->
+    manipulating?.stop?()
+    manipulating = null
     down = false
     dragging = false
     downPos = null
     lastPos = null
-    manipObj = null

@@ -1,11 +1,20 @@
+# Some of these functions have implicit dependency on the Monkey Patch lib in
+# the ivanreese/bucket repo. Make sure that exists.
+
 do ()->
 
   # Constructors
   Vec2 = (x=0, y=0)-> x:x, y:y
   Vec2.clone = (v)-> Vec2 v.x, v.y
-  Vec2.fromPolar = (a, d)-> Vec2 Math.cos(a) * d, Math.sin(a) * d
   Vec2.of = (s)-> Vec2 s, s
+
+  Vec2.fromMouse = (e)-> Vec2 e.clientX, e.clientY
+  Vec2.fromPolar = (a, d)-> Vec2 Math.cos(a) * d, Math.sin(a) * d
+
+  Vec2.window = ()-> Vec2 window.innerWidth, window.innerHeight
+  Vec2.halfWindow = ()-> Vec2 window.innerWidth/2, window.innerHeight/2
   Vec2.random = ()-> Vec2.complement Vec2.Smul 2, Vec2 Math.random(), Math.random()
+
   Vec2.toA = (v)-> [v.x, v.y]
 
   # Static Vectors

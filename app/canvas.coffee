@@ -1,28 +1,23 @@
 Take ["DOOM", "DOMContentLoaded"], (DOOM)->
 
-  elm = DOOM.create "canvas", document.body
-  ctx = elm.getContext "2d"
-  size = null
+  Make.async "Canvas", Canvas = (opts = {})->
+    canvas = DOOM.create "canvas", document.body, opts
+    ctx = canvas.getContext "2d"
+    size = resize canvas, ctx
+    window.addEventListener "resize", ()-> size = resize canvas, ctx
+    # Just a harmless bit o' monkey patching
+    ctx.circle = (x, y, r)-> ctx.arc x-0.5, y-0.5, r, 0, Math.TAU
+    ctx.sharpRect = (x, y, w, h)-> ctx.rect x-0.5, y-0.5, w, h
+    ctx.clear = ()-> ctx.clearRect -size.dw/2, -size.dh/2, size.dw, size.dh
+    ctx
 
-  Make.async "Canvas", Canvas =
-    ctx: ctx
-    size: null
-    clear: ()-> ctx.clearRect -size.hw, -size.hh, size.w, size.h
-    circle: (x, y, r)-> ctx.arc x-0.5, y-0.5, r, 0, Math.TAU
-    rect: (x, y, w, h)-> ctx.rect x-0.5, y-0.5, w, h
-
-  resize = ()->
-    w = window.innerWidth
+  resize = (canvas, ctx)->
+    w = window.innerWidth # css width
     h = window.innerHeight
-    hw = w/2
-    hh = h/2
     dpr = window.devicePixelRatio
-    elm.width = w * dpr
-    elm.height = h * dpr
+    dw = canvas.width = w * dpr # [d]pi width
+    dh = canvas.height = h * dpr
     ctx.resetTransform()
-    ctx.scale dpr, -dpr
-    ctx.translate hw|0, -hh|0
-    Canvas.size = size = {w, h, hw, hh}
-
-  resize()
-  window.addEventListener "resize", resize
+    ctx.scale dpr, -dpr # positive y = up
+    ctx.translate w/2|0, -h/2|0 # the |0 keeps things aligned to pixel grid
+    {dw, dh}

@@ -1,14 +1,14 @@
-Take ["Canvas", "DOOM", "Scene", "SVG", "Vec2"], (Canvas, DOOM, Scene, SVG, Vec2)->
+Take ["DOOM", "Particles", "SVG", "Vec2"], (DOOM, Particles, SVG, Vec2)->
 
   template =
     type: "Push"
     name: "Push"
+    elm: null
     pos: Vec2()
     angle: 0
-    strength: 100
+    strength: 1000
     radius: 8
     effectRadius: 128
-    elm: null
 
   Make.async "Push", Push = (opts = {})->
     obj = Object.merge template, opts
@@ -21,7 +21,7 @@ Take ["Canvas", "DOOM", "Scene", "SVG", "Vec2"], (Canvas, DOOM, Scene, SVG, Vec2
   Push.update = (obj, dt)->
     forceVec = Vec2.fromPolar obj.angle, obj.strength
 
-    for p in Scene.particles
+    for p in Particles.list
       dist = Vec2.dist p.pos, obj.pos
       if dist <= obj.effectRadius
         scale = 1 - (dist / obj.effectRadius)**4
@@ -35,8 +35,7 @@ Take ["Canvas", "DOOM", "Scene", "SVG", "Vec2"], (Canvas, DOOM, Scene, SVG, Vec2
         p.angle = Vec2.angle vel
         p.speed = len
 
-
-
     null
 
   Push.render = (obj)->
+    DOOM obj.elm, transform: "translate(#{obj.pos.x},#{obj.pos.y}) rotate(#{obj.angle*360/Math.TAU})"
