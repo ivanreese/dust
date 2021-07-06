@@ -1,5 +1,13 @@
 # Dust
 
+## Note to future Ivan
+
+The `main` branch is on a stable commit. The `wip` branch is an unfinished spike on new stuff that might be worth reviewing or might just be mulch for the grand composter of time.
+
+## What is Dust?
+
+* A programming environment where you don't think *systemically* — you think *improvisationally*.
+
 ## Building
 
 *If you'd like to hack on Dust and aren't sure how to set up these tools, reach out and I'll help you.*

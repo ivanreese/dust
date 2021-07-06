@@ -1,10 +1,12 @@
 :root {
   --bg: hsl(0, 0%, 100%);
+  --fg: hsl(0, 0%, 13%);
   --grid-axis: hsl(0, 0%, 90%);
   --grid-dot: hsl(0, 0%, 66%);
-  
+
   @media (prefers-color-scheme: dark) {
     --bg: hsl(0, 0%, 13%);
+    --fg: hsl(0, 0%, 100%);
     --grid-axis: hsl(0, 0%, 18%);
     --grid-dot: hsl(0, 0%, 40%);
   }

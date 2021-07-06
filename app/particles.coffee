@@ -1,6 +1,6 @@
 Take ["Camera", "Canvas", "Vec2"], (Camera, Canvas, Vec2)->
 
-  ctx = Canvas style: "z-index: 1"
+  ctx = Canvas style: "z-index: 100"
 
   Make.async "Particles", Particles =
     list: []

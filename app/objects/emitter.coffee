@@ -1,8 +1,7 @@
-Take ["DOOM", "Particles", "Sampler", "SVG", "Vec2"], (DOOM, Particles, Sampler, SVG, Vec2)->
+Take ["DOOM", "Particles", "Scene", "SVG", "Vec2"], (DOOM, Particles, Scene, SVG, Vec2)->
 
   template =
     type: "Emitter"
-    name: "Emitter"
     elm: null
     pos: Vec2()
     angle: 0
@@ -51,8 +50,11 @@ Take ["DOOM", "Particles", "Sampler", "SVG", "Vec2"], (DOOM, Particles, Sampler,
         maxSpeed: 300
         color: "hsl(0, 100%, #{Math.randInt(95, 100)}%"
 
-      if s = Sampler.list[obj.samplers.radius]
+      if s = Scene.objects[obj.samplers.radius]
         opts.radius = Math.lerp s.value, 0, 100, 2, 10, true
+
+      if s = Scene.objects[obj.samplers.color]
+        opts.color = s.value
 
       Particles.list.push Object.merge particleTemplate, opts
 

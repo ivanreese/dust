@@ -1,4 +1,4 @@
-Take ["Grid", "Particles", "Ring", "Scene", "SVG"], (Grid, Particles, Ring, Scene, SVG)->
+Take ["ColorField", "Grid", "Particles", "Ring", "Scene", "SVG"], (ColorField, Grid, Particles, Ring, Scene, SVG)->
 
   lastTime = performance.now()
 
@@ -9,13 +9,14 @@ Take ["Grid", "Particles", "Ring", "Scene", "SVG"], (Grid, Particles, Ring, Scen
     lastTime = time
 
     # UPDATE
-    Take(obj.type).update? obj, dt for obj in Scene.objects
+    Take(obj.type).update? obj, dt for id, obj of Scene.objects
     Particles.update dt
 
     # RENDER
     Grid()
+    ColorField()
     SVG.render()
-    Take(obj.type).render? obj, dt for obj in Scene.objects
+    Take(obj.type).render? obj, dt for id, obj of Scene.objects
     Ring.render()
     Particles.render dt
 
