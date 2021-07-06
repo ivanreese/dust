@@ -19,7 +19,7 @@ Take ["Camera", "Ring", "Scene", "Vec2", "World"], (Camera, Ring, Scene, Vec2, W
 
     unless clickedInRing
       # See if this click selects any objects
-      for obj in Scene.objects
+      for id, obj of Scene.objects
         if Vec2.dist(worldPos, obj.pos) <= obj.radius + 2
           Scene.select obj
           Ring.select obj

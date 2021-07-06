@@ -25,4 +25,12 @@ Take ["Camera", "Vec2"], (Camera, Vec2)->
     toScreen: screenFromWorld
     toCamera: cameraFromWorld
     toObject: objectFromWorld
+
     cameraFromScreen: cameraFromScreen
+    screenFromCamera: screenFromCamera
+    worldFromObject: worldFromObject
+    objectFromWorld: objectFromWorld
+    worldFromCamera: worldFromCamera
+    cameraFromWorld: cameraFromWorld
+    worldFromScreen: worldFromScreen
+    screenFromWorld: screenFromWorld

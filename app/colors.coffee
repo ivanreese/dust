@@ -7,6 +7,7 @@ Take [], ()->
 
   setup = ()->
     Colors.bg = get "bg"
+    Colors.fg = get "fg"
     Colors.grid =
       axis: get "grid-axis"
       dot: get "grid-dot"

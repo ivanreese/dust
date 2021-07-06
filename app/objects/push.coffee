@@ -2,7 +2,6 @@ Take ["DOOM", "Particles", "SVG", "Vec2"], (DOOM, Particles, SVG, Vec2)->
 
   template =
     type: "Push"
-    name: "Push"
     elm: null
     pos: Vec2()
     angle: 0
