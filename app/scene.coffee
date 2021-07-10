@@ -1,23 +1,34 @@
-Take [], ()->
+Take ["Canvas"], (Canvas)->
 
-  id = 0
+  ctx = Canvas style: "z-index: 51"
 
   Make "Scene", Scene =
-    count: 0
+    nextId: 0
     objects: {}
     selected: null
 
     create: (obj)->
-      obj.id = id++ unless obj.id?
+      obj.id = Scene.nextId++ unless obj.id?
       Scene.objects[obj.id] = obj
-      Scene.count++
       obj
 
     destroy: (obj)->
+      # TODO: make sure this object is deselected
       delete Scene.objects[obj.id]
-      Scene.count--
       obj
 
     select: (obj)->
       Scene.selected = obj
       obj
+
+    update: (dt)->
+      count = 0
+      for id, obj of Scene.objects
+        count++
+        for name, prop of obj
+          Take(name)?.update? obj, dt
+
+    render: (dt)->
+      ctx.clear()
+      for id, obj of Scene.objects
+        Take(obj.type).render? obj, dt, ctx

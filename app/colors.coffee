@@ -11,6 +11,7 @@ Take [], ()->
     Colors.grid =
       axis: get "grid-axis"
       dot: get "grid-dot"
+    Colors.particle = get "particle"
 
   window.matchMedia("(prefers-color-scheme: dark)").addListener setup
   setup()

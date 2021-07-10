@@ -1,23 +1,20 @@
-Take ["ColorField", "Grid", "Particles", "Ring", "Scene", "SVG"], (ColorField, Grid, Particles, Ring, Scene, SVG)->
+Take ["Grid", "Ring", "Scene", "SVG"], (Grid, Ring, Scene, SVG)->
 
   lastTime = performance.now()
 
-  requestAnimationFrame render = (time)->
-    requestAnimationFrame render
+  requestAnimationFrame raf = (time)->
+    requestAnimationFrame raf
 
     dt = Math.min 0.1, (time - lastTime) / 1000
     lastTime = time
 
     # UPDATE
-    Take(obj.type).update? obj, dt for id, obj of Scene.objects
-    Particles.update dt
+    Scene.update dt
 
     # RENDER
-    Grid()
-    ColorField()
-    SVG.render()
-    Take(obj.type).render? obj, dt for id, obj of Scene.objects
-    Ring.render()
-    Particles.render dt
+    Grid dt
+    SVG.render dt
+    Scene.render dt
+    Ring.render dt
 
     null

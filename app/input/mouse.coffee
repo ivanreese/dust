@@ -58,7 +58,7 @@ Take ["Camera", "Ring", "Scene", "Vec2", "World"], (Camera, Ring, Scene, Vec2, W
       if manipulating
         manipulating.change? Scene.selected, worldPos, deltaPos
       else
-        Camera.move Vec2.invertY deltaPos
+        Camera.move deltaPos
 
 
   window.addEventListener "mouseup", (e)->

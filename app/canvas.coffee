@@ -18,6 +18,6 @@ Take ["DOOM", "DOMContentLoaded"], (DOOM)->
     dw = canvas.width = w * dpr # [d]pi width
     dh = canvas.height = h * dpr
     ctx.resetTransform()
-    ctx.scale dpr, -dpr # positive y = up
-    ctx.translate w/2|0, -h/2|0 # the |0 keeps things aligned to pixel grid
+    ctx.scale dpr, dpr
+    ctx.translate w/2|0, h/2|0 # the |0 keeps things aligned to pixel grid
     {dw, dh}
