@@ -1,9 +1,8 @@
-Take ["Camera", "DOOM"], (Camera, DOOM)->
-  elm = DOOM.create "svg", document.body, style: "z-index: 50"
+Take ["DOOM", "World"], (DOOM, World)->
+  elm = DOOM.create "svg", document.body, style: "z-index: 70"
 
-  Make.async "SVG", SVG = DOOM.create "g", elm,
-    id: "root"
-    transform: "translate(-0.5,-0.5) scale(1, -1)"
+  Make.async "SVG", SVG = DOOM.create "g", elm, id: "root", fill: "none"
 
   SVG.render = ()->
-    DOOM SVG, transform: "translate(#{Camera.pos.x+window.innerWidth/2-0.5}, #{-Camera.pos.y+window.innerHeight/2-0.5}) scale(1, -1)"
+    p = World.toScreen()
+    DOOM SVG, transform: "translate(#{p.x - .5}, #{p.y - .5})"

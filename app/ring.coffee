@@ -1,9 +1,9 @@
-Take ["DOOM", "SVG", "Vec2"], (DOOM, SVG, Vec2)->
+Take ["Colors", "DOOM", "SVG", "Vec2"], (Colors, DOOM, SVG, Vec2)->
 
   selected = null
 
-  bg = DOOM.create "circle", null, r: 64, stroke: "#666", fill: "var(--bg)", fillOpacity: 0.5, strokeWidth: 4
-  ring = DOOM.create "g", null, class: "ring", fill: "none"
+  bg = DOOM.create "circle", null, r: 64, stroke: Colors.fg, strokeOpacity: .1, strokeWidth: 4
+  ring = DOOM.create "g", null, class: "ring"
 
   # List all the controls in the ring, and the index that will be used to position them
   controls =
@@ -15,7 +15,7 @@ Take ["DOOM", "SVG", "Vec2"], (DOOM, SVG, Vec2)->
     if index < 0
       Vec2()
     else
-      angle = Math.TAU * Math.lerp index, 0, 12, 0.25, -0.75, false
+      angle = Math.TAU * Math.lerp index, 0, 12, -0.25, 0.75, false
       Vec2.fromPolar angle, 64
 
 
@@ -31,7 +31,7 @@ Take ["DOOM", "SVG", "Vec2"], (DOOM, SVG, Vec2)->
     select: (obj, mouse)->
       selected = obj
       DOOM.append SVG, bg
-      DOOM.append SVG, obj.elm
+      DOOM.append SVG, obj.elm if obj.elm
       DOOM.append SVG, ring
 
     getControlAt: (mouse)->
