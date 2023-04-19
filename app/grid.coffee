@@ -32,10 +32,10 @@ Take ["Camera", "Canvas", "Colors", "Vec2"], (Camera, Canvas, Colors, Vec2)->
         y = y_world + camera.y
 
         # Use a bigger dot if we're on a major grid row & col
-        radius = if isMajorX and isMajorY then 1.6 else .6
+        r = if isMajorX and isMajorY then 1.6 else .6
 
         # Apply a falloff as we approach the edge of the screen
-        r = radius * edgeScale x, y, half
+        r *= edgeScale x, y, half if window.devicePixelRatio > 1
 
         if isMajorX and isMajorY
           ctx.circle x, y, r

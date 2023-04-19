@@ -8,7 +8,7 @@ Take ["DOOM", "DOMContentLoaded"], (DOOM)->
     # Just a harmless bit o' monkey patching
     ctx.circle = (x, y, r)-> ctx.arc x-0.5, y-0.5, r, 0, Math.TAU
     ctx.sharpRect = (x, y, w, h)-> ctx.rect x-0.5, y-0.5, w, h
-    ctx.clear = ()-> ctx.clearRect -size.dw/2, -size.dh/2, size.dw, size.dh
+    ctx.clear = ()-> ctx.clearRect -size.dw/2|0, -size.dh/2|0, size.dw, size.dh
     ctx
 
   resize = (canvas, ctx)->
